@@ -12,6 +12,17 @@ use piston::window::WindowSettings;
 use std::collections::LinkedList;
 use std::iter::FromIterator;
 
+// A simple enum to represent analog directions.
+#[derive(Clone, PartialEq)]
+enum Direction {
+    Up,
+    Left,
+    Right,
+    Down,
+    Still,
+}
+
+// The game class
 struct Game {
     gl: GlGraphics,
     snake: Snake,
@@ -44,15 +55,7 @@ impl Game {
     }
 }
 
-#[derive(Clone, PartialEq)]
-enum Direction {
-    Up,
-    Left,
-    Right,
-    Down,
-    Still,
-}
-
+//The snake class
 struct Snake {
     body: LinkedList<(i32, i32)>,
     dir: Direction,
@@ -62,28 +65,22 @@ impl Snake {
     fn render(&self, gl: &mut GlGraphics, args: &RenderArgs) {
         let blue: [f32; 4] = [0.0, 0.0, 1.0, 1.0];
 
-        let squares: Vec<graphics::types::Rectangle> = self.body
+        let squares: Vec<graphics::types::Rectangle> = self
+            .body
             .iter()
-            .map(|&(x, y)| {
-                graphics::rectangle::square(
-                    (x * 20) as f64, 
-                    (y * 20) as f64, 
-                    20_f64)
-            })
+            .map(|&(x, y)| graphics::rectangle::square((x * 20) as f64, (y * 20) as f64, 20_f64))
             .collect();
 
         gl.draw(args.viewport(), |c, gl| {
             let transform = c.transform;
-            squares.into_iter()
+            squares
+                .into_iter()
                 .for_each(|square| graphics::rectangle(blue, square, transform, gl));
         });
     }
 
     fn update(&mut self) {
-        let mut new_head = (*self.body
-            .front()
-            .expect("Snake has no body!"))
-            .clone();
+        let mut new_head = (*self.body.front().expect("Snake has no body!")).clone();
 
         match self.dir {
             Direction::Up => new_head.1 -= 1,
@@ -100,7 +97,7 @@ impl Snake {
 }
 
 fn main() {
-    let opengl = OpenGL::V3_2;
+    let opengl = OpenGL::V4_5;
 
     let mut window: GlutinWindow = WindowSettings::new("Snek Gaem", [200, 200])
         .graphics_api(opengl)
@@ -111,7 +108,7 @@ fn main() {
     let mut game = Game {
         gl: GlGraphics::new(opengl),
         snake: Snake {
-            body: LinkedList::from_iter((vec![(4,4), (4,5)]).into_iter()),
+            body: LinkedList::from_iter((vec![(4, 4), (4, 5)]).into_iter()),
             dir: Direction::Still,
         },
     };
