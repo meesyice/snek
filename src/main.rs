@@ -48,6 +48,7 @@ enum Direction {
     Left,
     Right,
     Down,
+    Still,
 }
 
 struct Snake {
@@ -76,6 +77,7 @@ impl Snake {
             Direction::Left => self.pos_x -= 1,
             Direction::Right => self.pos_x += 1,
             Direction::Down => self.pos_y += 1,
+            Direction::Still => self.pos_x = self.pos_x,
         }
     }
 }
@@ -94,11 +96,11 @@ fn main() {
         snake: Snake {
             pos_x: 4,
             pos_y: 4,
-            dir: Direction::Up,
+            dir: Direction::Still,
         },
     };
 
-    let mut events = Events::new(EventSettings::new()).ups(10);
+    let mut events = Events::new(EventSettings::new()).ups(15);
 
     while let Some(e) = events.next(&mut window) {
         if let Some(r) = e.render_args() {
