@@ -165,7 +165,6 @@ pub struct Food {
 }
 
 impl Food {
-    // Return true if snake ate food this update
     fn update(&mut self, snake: &Snake) -> bool {
         let front = snake.body.front().unwrap();
         if front.0 == self.x && front.1 == self.y {
@@ -242,5 +241,4 @@ fn main() {
             }
         }
     }
-    println!("Congratulations, your score was: {}", game.score);
 }
